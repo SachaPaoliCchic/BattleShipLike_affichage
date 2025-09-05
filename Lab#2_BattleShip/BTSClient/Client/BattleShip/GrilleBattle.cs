@@ -17,6 +17,7 @@ namespace BattleShip
          du client au serveur plus du serveur au client
         */
 
+        private char[,] emplacementBateau = new char[4, 4];
         private char[,] emplacement = new char[4, 4];
         List<string> caractereGrille = new List<string>();
 
@@ -36,8 +37,8 @@ namespace BattleShip
         {
             // Ici on va verifier les coordonnées entrées  càd être sur que on a
             // une entrée correcte de la forme A2 ou B1 et non un G9 par exmple
-            emplacement[x, y] = 'B';
-            emplacement[a, b] = 'B';
+            emplacementBateau[x, y] = 'B';
+            emplacementBateau[a, b] = 'B';
         }
 
         public void Tirer(int x, int y)
@@ -45,7 +46,7 @@ namespace BattleShip
             // Ici on va verifier les coordonnées entrées  càd être sur que on a
             // une entrée correcte de la forme A2 ou B1 et non un G9 par exmple
 
-            if (emplacement[x, y] == 'B')
+            if (emplacementBateau[x, y] == 'B')
             {
                 emplacement[x, y] = 'T'; // Bateau touché
             }
@@ -54,7 +55,35 @@ namespace BattleShip
                 emplacement[x, y] = 'X';
             }
         }
-         
+
+        public bool ConvertirCoord(string coord, out int x, out int y)
+        {
+            x = -1;
+            y = -1;
+            if (string.IsNullOrWhiteSpace(coord) || coord.Length != 2)
+                return false;
+
+            coord = coord.ToUpper();
+            char col = coord[0];
+            char row = coord[1];
+
+            // Conversion colonne
+            int colIndex = lettreDuTableau.IndexOf(col);
+            if (colIndex == -1)
+                return false;
+
+            // Conversion ligne
+            if (!char.IsDigit(row))
+                return false;
+            int rowIndex = (int)char.GetNumericValue(row) - 1;
+            if (rowIndex < 0 || rowIndex > 3)
+                return false;
+
+            x = rowIndex;
+            y = colIndex;
+            return true;
+        }
+
         public bool VerifierCoordonnée(string coord, out char lettreColonne, out int ligne)
         {
             lettreColonne = ' ';
@@ -89,7 +118,7 @@ namespace BattleShip
             return true;
         }
 
-        public void AfficherMaGrille()
+        public void AfficherMaGrilleBateau()
         {
             Console.Write("    ");
             foreach (char letter in "ABCD")
@@ -97,19 +126,17 @@ namespace BattleShip
                 Console.Write($" {letter}  ");
             }
             Console.WriteLine();
-
             Console.WriteLine("  ┌───┬───┬───┬───┐");
-
-            // Lignes 1–4
             for (int numLigne = 0; numLigne < 4; numLigne++)
             {
                 Console.Write($"{numLigne + 1} │");
                 for (int barreHorizontale = 0; barreHorizontale < 4; barreHorizontale++)
                 {
-                    Console.Write($" {emplacement[numLigne, barreHorizontale]} │");
+                    char symbole = emplacementBateau[numLigne, barreHorizontale];
+                    if (symbole == '\0') symbole = '-'; // case vide
+                    Console.Write($" {symbole} │");
                 }
                 Console.WriteLine();
-
                 if (numLigne < 3)
                     Console.WriteLine("  ├───┼───┼───┼───┤");
                 else
@@ -117,7 +144,7 @@ namespace BattleShip
             }
         }
 
-        public void AfficherGrilleDattaque()
+        public void AfficherGrilleTir()
         {
             Console.Write("    ");
             foreach (char letter in "ABCD")
@@ -125,19 +152,16 @@ namespace BattleShip
                 Console.Write($" {letter}  ");
             }
             Console.WriteLine();
-
             Console.WriteLine("  ┌───┬───┬───┬───┐");
-
-            // Lignes 1–4
             for (int numLigne = 0; numLigne < 4; numLigne++)
             {
                 Console.Write($"{numLigne + 1} │");
                 for (int barreHorizontale = 0; barreHorizontale < 4; barreHorizontale++)
                 {
-                    Console.Write($" {emplacement[numLigne, barreHorizontale]} │");
+                    char symbole = emplacement[numLigne, barreHorizontale];
+                    Console.Write($" {symbole} │");
                 }
                 Console.WriteLine();
-
                 if (numLigne < 3)
                     Console.WriteLine("  ├───┼───┼───┼───┤");
                 else
