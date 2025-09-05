@@ -24,25 +24,35 @@ namespace BattleShip
 
         // au debut ce tableau est vide car personne n'a encore joué donc...
 
-        public GrilleBattle(char rendu)
+        public GrilleBattle()
         {
             for (int x = 0; x < 4; x++)
                 for (int y = 0; y < 4; y++)
-                    emplacement[x, y] = rendu;
+                    emplacement[x, y] = '-';
         }
 
 
-
-
-        public bool Tir(string coordonnée, char symbole)
+        public void PlacerBateau(int x, int y, int a, int b)
         {
             // Ici on va verifier les coordonnées entrées  càd être sur que on a
             // une entrée correcte de la forme A2 ou B1 et non un G9 par exmple
-            if (!VerifierCoordonnée(coordonnée, out char r, out int c))
-                return false;
+            emplacement[x, y] = 'B';
+            emplacement[a, b] = 'B';
+        }
 
-            emplacement[r, c] = symbole;
-            return true;
+        public void Tirer(int x, int y)
+        {
+            // Ici on va verifier les coordonnées entrées  càd être sur que on a
+            // une entrée correcte de la forme A2 ou B1 et non un G9 par exmple
+
+            if (emplacement[x, y] == 'B')
+            {
+                emplacement[x, y] = 'T'; // Bateau touché
+            }
+            else if (emplacement[x, y] == '-')
+            {
+                emplacement[x, y] = 'X';
+            }
         }
          
         public bool VerifierCoordonnée(string coord, out char lettreColonne, out int ligne)
@@ -62,7 +72,7 @@ namespace BattleShip
             //{
 
             //}
-            if ( !(lettreDuTableau.Contains('c')))
+            if ( !(lettreDuTableau.Contains('C')))
                 return false;
 
             // Colonne
@@ -79,9 +89,8 @@ namespace BattleShip
             return true;
         }
 
-        public void AfficherGrille()
+        public void AfficherMaGrille()
         {
-
             Console.Write("    ");
             foreach (char letter in "ABCD")
             {
@@ -97,7 +106,35 @@ namespace BattleShip
                 Console.Write($"{numLigne + 1} │");
                 for (int barreHorizontale = 0; barreHorizontale < 4; barreHorizontale++)
                 {
-                    Console.Write("   │");
+                    Console.Write($" {emplacement[numLigne, barreHorizontale]} │");
+                }
+                Console.WriteLine();
+
+                if (numLigne < 3)
+                    Console.WriteLine("  ├───┼───┼───┼───┤");
+                else
+                    Console.WriteLine("  └───┴───┴───┴───┘");
+            }
+        }
+
+        public void AfficherGrilleDattaque()
+        {
+            Console.Write("    ");
+            foreach (char letter in "ABCD")
+            {
+                Console.Write($" {letter}  ");
+            }
+            Console.WriteLine();
+
+            Console.WriteLine("  ┌───┬───┬───┬───┐");
+
+            // Lignes 1–4
+            for (int numLigne = 0; numLigne < 4; numLigne++)
+            {
+                Console.Write($"{numLigne + 1} │");
+                for (int barreHorizontale = 0; barreHorizontale < 4; barreHorizontale++)
+                {
+                    Console.Write($" {emplacement[numLigne, barreHorizontale]} │");
                 }
                 Console.WriteLine();
 
