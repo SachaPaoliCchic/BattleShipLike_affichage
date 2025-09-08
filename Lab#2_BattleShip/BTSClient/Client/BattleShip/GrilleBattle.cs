@@ -21,7 +21,7 @@ namespace BattleShip
         private char[,] emplacement = new char[4, 4];
         List<string> caractereGrille = new List<string>();
 
-        string lettreDuTableau ="ABCD";
+        string lettreDuTableau = "ABCD";
 
         // au debut ce tableau est vide car personne n'a encore joué donc...
 
@@ -33,18 +33,41 @@ namespace BattleShip
         }
 
 
-        public void PlacerBateau(int x, int y, int a, int b)
+        public bool PlacerBateau(int x, int y, int a, int b)
         {
-            // Ici on va verifier les coordonnées entrées  càd être sur que on a
-            // une entrée correcte de la forme A2 ou B1 et non un G9 par exmple
+
+
+            if (!SontAdjacentes(x, y, a, b))
+                return false;
+
             emplacementBateau[x, y] = 'B';
             emplacementBateau[a, b] = 'B';
+
+
+            return true;
+
         }
 
-        public void Tirer(int x, int y)
+        public bool SontAdjacentes(int x1, int y1, int x2, int y2)
         {
-            // Ici on va verifier les coordonnées entrées  càd être sur que on a
-            // une entrée correcte de la forme A2 ou B1 et non un G9 par exmple
+            // même ligne, colonnes consécutives
+            if (x1 == x2 && (y1 == y2 + 1 || y1 == y2 - 1))
+                return true;
+
+            // même colonne, lignes consécutives
+            if (y1 == y2 && (x1 == x2 + 1 || x1 == x2 - 1))
+                return true;
+
+            return false;
+        }
+
+        public bool Tirer(int x, int y)
+        {
+
+            if (emplacement[x, y] == 'T' || emplacement[x, y] == 'X')
+            {
+                return false;
+            }
 
             if (emplacementBateau[x, y] == 'B')
             {
@@ -54,6 +77,8 @@ namespace BattleShip
             {
                 emplacement[x, y] = 'X';
             }
+
+            return true;
         }
 
         public bool ConvertirCoord(string coord, out int x, out int y)
@@ -76,7 +101,7 @@ namespace BattleShip
             if (!char.IsDigit(row))
                 return false;
             int rowIndex = (int)char.GetNumericValue(row) - 1;
-            if (rowIndex < 0 || rowIndex > 3)
+            if (rowIndex < 0 || rowIndex >= emplacement.GetLength(0))
                 return false;
 
             x = rowIndex;
@@ -84,39 +109,7 @@ namespace BattleShip
             return true;
         }
 
-        public bool VerifierCoordonnée(string coord, out char lettreColonne, out int ligne)
-        {
-            lettreColonne = ' ';
-            ligne = -1;
 
-            if (string.IsNullOrWhiteSpace(coord) || coord.Length < 2 || coord.Length >= 3)
-                return false;
-
-            coord = coord.Trim().ToUpper();
-
-            // Lettre
-            lettreColonne = coord[0];
-
-            //foreach (char  in lettreDuTableau)
-            //{
-
-            //}
-            if ( !(lettreDuTableau.Contains('C')))
-                return false;
-
-            // Colonne
-            
-
-            if (!int.TryParse(coord.Substring(1), out int colNum) )
-                return false;
-
-            if(!(colNum < 1 || colNum > 4))
-                return false;
-
-
-            ligne = colNum - 1;
-            return true;
-        }
 
         public void AfficherMaGrilleBateau()
         {
@@ -168,5 +161,9 @@ namespace BattleShip
                     Console.WriteLine("  └───┴───┴───┴───┘");
             }
         }
+
+
+
+
     }
-}
+}
