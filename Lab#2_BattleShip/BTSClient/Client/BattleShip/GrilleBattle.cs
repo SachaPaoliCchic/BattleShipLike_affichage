@@ -32,7 +32,6 @@ namespace BattleShip
                     emplacement[x, y] = '-';
         }
 
-
         public bool PlacerBateau(int x, int y, int a, int b)
         {
 
@@ -161,6 +160,8 @@ namespace BattleShip
                     Console.WriteLine("  └───┴───┴───┴───┘");
             }
         }
+
+
 
 
 
