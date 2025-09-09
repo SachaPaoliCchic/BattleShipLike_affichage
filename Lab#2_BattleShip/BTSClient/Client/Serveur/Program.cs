@@ -10,13 +10,9 @@ namespace Serveur
 
             // Placement du bateau
             Console.WriteLine("Entrez les coordonnées du bateau (ex: A1 A2):");
-            string coord = Console.ReadLine();
+            string? coord = Console.ReadLine();
 
-            if (Grille.PlacerBateau(coord)) // Nouvelle version gère tout
-            {
-                Console.WriteLine("Bateau placé avec succès !");
-            }
-            else
+            if (string.IsNullOrWhiteSpace(coord) || !Grille.PlacerBateau(coord))
             {
                 Console.WriteLine("Placement invalide (coordonnées incorrectes ou non adjacentes).");
             }
@@ -30,8 +26,8 @@ namespace Serveur
 
             // Premier tir
             Console.WriteLine("\nEntrez les coordonnées où tirer (ex: B3):");
-            string coordTir = Console.ReadLine();
-            if (!Grille.Tirer(coordTir))
+            string? coordTir = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(coordTir) || !Grille.Tirer(coordTir))
             {
                 Console.WriteLine("Coordonnées invalides ou case déjà jouée !");
             }
@@ -43,8 +39,8 @@ namespace Serveur
 
             // Deuxième tir
             Console.WriteLine("\nEntrez les coordonnées où tirer (ex: B3):");
-            string coordTir2 = Console.ReadLine();
-            if (!Grille.Tirer(coordTir2))
+            string? coordTir2 = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(coordTir2) || !Grille.Tirer(coordTir2))
             {
                 Console.WriteLine("Coordonnées invalides ou case déjà jouée !");
             }
