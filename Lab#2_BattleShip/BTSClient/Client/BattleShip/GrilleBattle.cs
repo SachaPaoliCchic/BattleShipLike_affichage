@@ -32,19 +32,29 @@ namespace BattleShip
                     emplacement[x, y] = '-';
         }
 
-        public bool PlacerBateau(string coord1, string coord2)
+        public bool PlacerBateau(string coord)
         {
-            if (!ConvertirCoord(coord1, out int x1, out int y1)) return false;
-            if (!ConvertirCoord(coord2, out int x2, out int y2)) return false;
+            if (string.IsNullOrWhiteSpace(coord))
+                return false;
 
-            if (!SontAdjacentes(x1, y1, x2, y2)) return false;
+            string[] coords = coord.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (coords.Length != 2)
+                return false;
 
+            if (!ConvertirCoord(coords[0], out int x1, out int y1)) return false;
+            if (!ConvertirCoord(coords[1], out int x2, out int y2)) return false;
+
+            if (!SontAdjacentes(x1, y1, x2, y2))
+                return false;
+
+            if (emplacementBateau[x1, y1] == 'B' || emplacementBateau[x2, y2] == 'B')
+                return false;
 
             emplacementBateau[x1, y1] = 'B';
             emplacementBateau[x2, y2] = 'B';
-
             return true;
         }
+
 
 
         public bool SontAdjacentes(int x1, int y1, int x2, int y2)
