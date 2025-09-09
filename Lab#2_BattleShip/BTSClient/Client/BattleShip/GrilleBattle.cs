@@ -32,20 +32,20 @@ namespace BattleShip
                     emplacement[x, y] = '-';
         }
 
-        public bool PlacerBateau(int x, int y, int a, int b)
+        public bool PlacerBateau(string coord1, string coord2)
         {
+            if (!ConvertirCoord(coord1, out int x1, out int y1)) return false;
+            if (!ConvertirCoord(coord2, out int x2, out int y2)) return false;
+
+            if (!SontAdjacentes(x1, y1, x2, y2)) return false;
 
 
-            if (!SontAdjacentes(x, y, a, b))
-                return false;
-
-            emplacementBateau[x, y] = 'B';
-            emplacementBateau[a, b] = 'B';
-
+            emplacementBateau[x1, y1] = 'B';
+            emplacementBateau[x2, y2] = 'B';
 
             return true;
-
         }
+
 
         public bool SontAdjacentes(int x1, int y1, int x2, int y2)
         {
@@ -60,25 +60,7 @@ namespace BattleShip
             return false;
         }
 
-        public bool Tirer(int x, int y)
-        {
-
-            if (emplacement[x, y] == 'T' || emplacement[x, y] == 'X')
-            {
-                return false;
-            }
-
-            if (emplacementBateau[x, y] == 'B')
-            {
-                emplacement[x, y] = 'T'; // Bateau touché
-            }
-            else if (emplacement[x, y] == '-')
-            {
-                emplacement[x, y] = 'X';
-            }
-
-            return true;
-        }
+        
 
         public bool ConvertirCoord(string coord, out int x, out int y)
         {
@@ -105,6 +87,22 @@ namespace BattleShip
 
             x = rowIndex;
             y = colIndex;
+            return true;
+        }
+
+        public bool Tirer(string coord)
+        {
+            if (!ConvertirCoord(coord, out int x, out int y))
+                return false; // coordonnées invalides
+
+            if (emplacement[x, y] == 'T' || emplacement[x, y] == 'X')
+                return false; // déjà joué
+
+            if (emplacementBateau[x, y] == 'B')
+                emplacement[x, y] = 'T'; // touché
+            else if (emplacement[x, y] == '-')
+                emplacement[x, y] = 'X'; // raté
+
             return true;
         }
 
